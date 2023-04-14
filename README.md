@@ -46,8 +46,8 @@ npm run build
 
 ## Dependencias
 
-Esta página de aterrizaje fue construida con las siguientes dependencias:
+Esta página fue construida con las siguientes dependencias:
 
 - react-bootstrap
-- react-easy-marquee
 - react-linkify
+- react-chatbot-kit
