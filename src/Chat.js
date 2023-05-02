@@ -4,10 +4,9 @@ import 'react-chatbot-kit/build/main.css';
 import { createChatBotMessage } from 'react-chatbot-kit';
 import {askLSTM, askTransformer} from './services';
 
-
 const confidenceThresholdLSTM = 0.5
 const confidenceThresholdTransformer = 0.5
-const googleProgrammableSearchEngineURL = 'https:/google.com'
+const googleProgrammableSearchEngineURL = 'https://google.com'
 
 const MessageParser = ({ children, actions }) => {
   const parse = (message) => {
@@ -23,7 +22,7 @@ const MessageParser = ({ children, actions }) => {
               actions.handleAnswer(response.answer);
             } else {
               actions.handleAnswer(
-                'No entiendo tu pregunta. Te sugiero utilizar el siguiente buscador personalizado de Google: ' + googleProgrammableSearchEngineURL
+                'Te sugiero utilizar el siguiente buscador personalizado de Google: ' + googleProgrammableSearchEngineURL
               );
             }
           });
@@ -69,7 +68,11 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
 };
 
 const config = {
-  initialMessages: [createChatBotMessage('Hola, ¿en qué puedo ayudarte?')]
+  initialMessages: [createChatBotMessage('Hola, ¿en qué puedo ayudarte?')],
+  botName: 'CETEC Chatbot',
+  customComponents: {
+    header: () => <div></div>
+  }
 }
 
 function Chat() {

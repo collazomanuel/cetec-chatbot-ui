@@ -36,7 +36,7 @@ Esto iniciará un servidor de desarrollo en http://localhost:3000, donde podrás
 
 Para desplegar el front-end, sigue estos pasos:
 
-1. Construye la versión de producción a la aplicación:
+1. Construye la versión de producción de la aplicación:
 
 ```bash
 npm run build
@@ -51,3 +51,6 @@ Esta página fue construida con las siguientes dependencias:
 - react-bootstrap
 - react-linkify
 - react-chatbot-kit
+- node-wit
+
+![Footer](https://user-images.githubusercontent.com/75450615/175360883-72efe4c4-1f14-4b11-9a7c-55937563cffa.png)
