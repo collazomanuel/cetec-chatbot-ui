@@ -21,19 +21,18 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: var(--clr-1);
-  height: 10vh;
+
 }
 
 .chatbot {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 70vh;
   justify-content: center;
 }
 
 .App-footer {
-  height: 20vh;
+
 }
 
 .fiuba-logo {
@@ -41,3 +40,23 @@
 }
 
 
+@media only screen and (max-width: 768px) {
+  .App-header {
+    display: none !important;
+  }
+  .App-footer {
+    display: none !important;
+  }
+  .chatbot {
+    display: block !important;
+    flex-direction: column !important;
+  }
+  .react-chatbot-kit-chat-container {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    top: 0 !important;
+    margin: 0 !important;
+  }
+
+}

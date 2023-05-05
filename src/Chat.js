@@ -2,11 +2,11 @@ import React from 'react';
 import Chatbot from 'react-chatbot-kit';
 import 'react-chatbot-kit/build/main.css';
 import { createChatBotMessage } from 'react-chatbot-kit';
-import {askLSTM, askTransformer} from './services';
+import {askLSTM, askTransformer, askGPT} from './services';
 
 const confidenceThresholdLSTM = 0.5
 const confidenceThresholdTransformer = 0.5
-const googleProgrammableSearchEngineURL = 'https://google.com'
+//const googleProgrammableSearchEngineURL = 'https://google.com'
 
 const MessageParser = ({ children, actions }) => {
   const parse = (message) => {
@@ -21,9 +21,14 @@ const MessageParser = ({ children, actions }) => {
             if (response.confidence > confidenceThresholdTransformer){
               actions.handleAnswer(response.answer);
             } else {
+              askGPT(message).then((response) => {
+                actions.handleAnswer(response.answer);
+              })
+              /*
               actions.handleAnswer(
                 'Te sugiero utilizar el siguiente buscador personalizado de Google: ' + googleProgrammableSearchEngineURL
               );
+              */
             }
           });
         }
@@ -82,6 +87,7 @@ function Chat() {
         config={config}
         messageParser={MessageParser}
         actionProvider={ActionProvider}
+        placeholderText='Escriba su pregunta aquí'
       />
     </div>
   );
