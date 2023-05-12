@@ -1,23 +1,19 @@
 import axios from 'axios';
-//import { Wit } from 'node-wit';
+import { Wit } from 'node-wit';
 
 const askLSTM = async (message) => {
 
-
-  if (true)
-    return {answer: 'respuesta de LSTM', confidence: 0.4};
-
-  /*
   try {
-    const witClient = new Wit({ accessToken: process.env.WIT_ACCESS_TOKEN });
+    const witClient = new Wit({ accessToken: process.env.REACT_APP_WIT_ACCESS_TOKEN });
     const structure = await witClient.message(message.toLowerCase(), {});
-    const response = await axios.get('lstm-back', { params: { nlus: structure }});
-    return response.data;
+    const response = await axios.get(process.env.REACT_APP_BACK_GPT_URL + '/nlu_assembly', { params: { nlus: structure }});
+    return {
+      answer: response.data,
+      confidence: 1.0
+    }
   } catch (error) {
     throw error;
   }
-  */
-
 };
 
 const askTransformer = async (message) => {
@@ -27,7 +23,10 @@ const askTransformer = async (message) => {
 
   try {
     const response = await axios.get('transformer-back');
-    return response.data;
+    return {
+      answer: response.data,
+      confidence: 0.0
+    }
 
   } catch (error) {
     console.error(error);
@@ -37,9 +36,10 @@ const askTransformer = async (message) => {
 const askGPT = async (message) => {
 
   try {
-    const response = await axios.post('http://localhost:8000/generate?prompt=' + message);
+    const response = await axios.post(process.env.REACT_APP_BACK_GPT_URL + '/generate?prompt=' + message);
     return {
-      answer: response.data
+      answer: response.data,
+      confidence: 1.0
     }
   } catch (error) {
     console.error(error);
@@ -65,4 +65,8 @@ fetch(`http://localhost:8000/generate?prompt=${encodeURIComponent(prompt)}`, {
         error = err.message;
       });
 
+*/
+
+/*
+https://youtu.be/h1WLN9Gzbwc
 */
