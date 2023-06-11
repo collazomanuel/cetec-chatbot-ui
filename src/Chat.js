@@ -2,10 +2,8 @@ import React from 'react';
 import Chatbot from 'react-chatbot-kit';
 import 'react-chatbot-kit/build/main.css';
 import { createChatBotMessage } from 'react-chatbot-kit';
-import {askLSTM, askTransformer, askGPT} from './services';
+import { askGPT } from './services';
 
-const confidenceThresholdLSTM = 0.5
-const confidenceThresholdTransformer = 0.5
 //const googleProgrammableSearchEngineURL = 'https://google.com'
 
 const MessageParser = ({ children, actions }) => {
@@ -13,25 +11,8 @@ const MessageParser = ({ children, actions }) => {
     if (message.includes('hola')) {
       actions.handleHello();
     } else {
-      askLSTM(message).then((response) => {
-        if (response.confidence > confidenceThresholdLSTM){
-          actions.handleAnswer(response.answer);
-        } else {
-          askTransformer(message).then((response) => {
-            if (response.confidence > confidenceThresholdTransformer){
-              actions.handleAnswer(response.answer);
-            } else {
-              askGPT(message).then((response) => {
-                actions.handleAnswer(response.answer);
-              })
-              /*
-              actions.handleAnswer(
-                'Te sugiero utilizar el siguiente buscador personalizado de Google: ' + googleProgrammableSearchEngineURL
-              );
-              */
-            }
-          });
-        }
+      askGPT(message).then((response) => {
+        actions.handleAnswer(response.answer);
       });
     }
   };
