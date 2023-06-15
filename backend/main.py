@@ -1,13 +1,16 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.encoders import jsonable_encoder
+from fastapi.responses import StreamingResponse
 import openai
 from decouple import config
 from pymongo import MongoClient
 from bson import ObjectId
-from typing import Optional, List
+from typing import Optional
 from pydantic import BaseModel, Field
 from datetime import datetime
+import pandas as pd
+import io
 
 openai.api_key = config('OPENAI_KEY')
 mongodb_key = config('MONGODB_KEY')
@@ -74,3 +77,15 @@ async def generate_text(prompt: str):
     # Print the generated text
     message = completions.choices[0]['message']['content']
     return (message)
+
+@app.get("/prompts", response_class=StreamingResponse)
+async def export_data():
+    prompts = [p['text'] for p in db["prompts"].find()]
+
+    df = pd.DataFrame({'=============== Chatbot Prompts ===============': prompts})
+    stream = io.StringIO()
+    df.to_csv(stream, index=False)
+    response = StreamingResponse(
+        iter([stream.getvalue()]), media_type="text/csv")
+    response.headers["Content-Disposition"] = "attachment; filename=prompts.csv"
+    return response
