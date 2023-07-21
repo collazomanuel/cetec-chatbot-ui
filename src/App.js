@@ -8,8 +8,8 @@ import Chat from './Chat'
 
 function App() {
 
-  const [ user, setUser ] = useState([]);
-  const [ profile, setProfile ] = useState([]);
+  const [ user, setUser ] = useState(null);
+  const [ profile, setProfile ] = useState(null);
 
   const login = useGoogleLogin({
     onSuccess: (codeResponse) => setUser(codeResponse),
@@ -19,6 +19,7 @@ function App() {
   const logout = () => {
     googleLogout();
     setProfile(null);
+    setUser(null);
 };
 
   useEffect(
