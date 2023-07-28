@@ -7,6 +7,29 @@ import { askGPT } from './services';
 
 //const googleProgrammableSearchEngineURL = 'https://google.com'
 
+const Loader = () => {
+  return (
+    <div className="chatbot-loader-container">
+      <svg
+        id="dots"
+        width="50px"
+        height="21px"
+        viewBox="0 0 132 58"
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <g stroke="none" fill="none">
+          <g id="chatbot-loader" fill="#fff">
+            <circle id="chatbot-loader-dot1" cx="25" cy="30" r="13"></circle>
+            <circle id="chatbot-loader-dot2" cx="65" cy="30" r="13"></circle>
+            <circle id="chatbot-loader-dot3" cx="105" cy="30" r="13"></circle>
+          </g>
+        </g>
+      </svg>
+    </div>
+  );
+};
+
 function Chat(props) {
 
   const MessageParser = ({ children, actions }) => {
@@ -14,9 +37,7 @@ function Chat(props) {
       if (message.includes('hola')) {
         actions.handleHello();
       } else {
-        askGPT(message).then((response) => {
-          actions.handleAnswer(response.answer);
-        });
+        actions.handleQuestion(message);
       }
     };
     return (
@@ -38,18 +59,26 @@ function Chat(props) {
         messages: [...prev.messages, botMessage],
       }));
     };
-    const handleAnswer = (answer) => {
-      const botMessage = createChatBotMessage(answer);
+    const handleQuestion = (message) => {
+      const loadingMessage = createChatBotMessage(Loader());
       setState((prev) => ({
         ...prev,
-        messages: [...prev.messages, botMessage],
+        messages: [...prev.messages, loadingMessage],
       }));
+      askGPT(message).then((response) => {
+        let botMessage = createChatBotMessage(response.answer);
+        botMessage.loading = false;
+        setState((prev) => ({
+          ...prev,
+          messages: [...prev.messages.slice(0, -1), botMessage],
+        }));
+      });
     };
     return (
       <div>
         {React.Children.map(children, (child) => {
           return React.cloneElement(child, {
-            actions: {handleHello, handleAnswer}
+            actions: {handleHello, handleQuestion}
           });
         })}
       </div>
