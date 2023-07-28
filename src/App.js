@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { googleLogout, useGoogleLogin } from '@react-oauth/google';
+import { useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import fiubaLogo from './fiuba-logo.png'
 import cetecLogo from './cetec-logo.png'
@@ -16,12 +16,6 @@ function App() {
     onSuccess: (codeResponse) => setUser(codeResponse),
     onError: (error) => console.log('Login Failed: ', error)
   });
-
-  const logout = () => {
-    googleLogout();
-    setProfile(null);
-    setUser(null);
-};
 
   useEffect(
     () => {
