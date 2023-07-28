@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import fiubaLogo from './fiuba-logo.png'
+import cetecLogo from './cetec-logo.png'
 import './App.css';
 import Chat from './Chat'
 
@@ -43,15 +44,12 @@ function App() {
 
   return (
     <div className=' App'>
-      <div className='App-header'>
-        <h2><code>CETEC Chatbot</code></h2>
-      </div>
       {profile ? (
         <>
           <div className='chatbot'>
-            <Chat />
+            <Chat userName={profile.given_name} userImage={profile.picture} botImage={cetecLogo}/>
           </div>
-          <button onClick={logout}>Cerrar sesión</button>
+          {/*<button onClick={logout}>Cerrar sesión</button>*/}
         </>
       ) : (
         <>

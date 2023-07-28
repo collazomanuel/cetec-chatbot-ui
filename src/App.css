@@ -39,24 +39,55 @@
   width: 20%;
 }
 
+.react-chatbot-kit-user-picture {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-left: 15px;
+}
+
+.react-chatbot-kit-bot-picture {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
 
 @media only screen and (max-width: 768px) {
-  .App-header {
-    display: none !important;
+
+  .chatbot {
+    height: 100vh !important;
   }
+
   .App-footer {
     display: none !important;
   }
   .chatbot {
     display: block !important;
-    flex-direction: column !important;
   }
   .react-chatbot-kit-chat-container {
     display: block !important;
     width: 100% !important;
     height: 100% !important;
-    top: 0 !important;
-    margin: 0 !important;
   }
 
+  .react-chatbot-kit-chat-inner-container{
+    height: 100% !important;
+  }
+
+  .react-chatbot-kit-chat-message-container {
+    height: calc(100vh - 40px) !important;
+    padding-bottom: 0% !important;
+    overflow-x: hidden !important;
+  }
+
+  .react-chatbot-kit-chat-input-container{
+    position: relative !important;
+    height: 40px !important;
+  }
+
+  .react-chatbot-kit-chat-bot-message {
+    margin: 0% !important;
+    width: fit-content !important;
+  }
 }
