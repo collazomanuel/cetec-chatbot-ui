@@ -2,7 +2,7 @@ import React from 'react';
 import Chatbot from 'react-chatbot-kit';
 import 'react-chatbot-kit/build/main.css';
 import { createChatBotMessage } from 'react-chatbot-kit';
-import { askGPT } from './services';
+import { askGPT, askLSTM } from './services';
 
 
 //const googleProgrammableSearchEngineURL = 'https://google.com'
@@ -65,7 +65,7 @@ function Chat(props) {
         ...prev,
         messages: [...prev.messages, loadingMessage],
       }));
-      askGPT(message).then((response) => {
+      askLSTM(message).then((response) => {
         let botMessage = createChatBotMessage(response.answer);
         botMessage.loading = false;
         setState((prev) => ({

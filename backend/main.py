@@ -11,13 +11,16 @@ from pydantic import BaseModel, Field
 from datetime import datetime
 import pandas as pd
 import io
+import requests
 
 openai.api_key = config('OPENAI_KEY')
 mongodb_key = config('MONGODB_KEY')
+wit_access_token = config('WIT_ACCESS_TOKEN')
+wit_api_endpoint = config('WIT_API_ENDPOINT')
 
 app = FastAPI()
 client = MongoClient(mongodb_key)
-db = client.chatbot
+db = client["cetec-chatbot"]
 
 class PyObjectId(ObjectId):
     @classmethod
@@ -63,8 +66,8 @@ app.add_middleware(
 
 model_engine = "gpt-3.5-turbo"
 
-@app.post("/generate")
-async def generate_text(prompt: str):
+@app.post("/gpt")
+async def generate_gpt_text(prompt: str):
     completions = openai.ChatCompletion.create(
       model= model_engine,
       temperature=.2,
@@ -73,15 +76,37 @@ async def generate_text(prompt: str):
         {"role": "user", "content": prompt}
       ]
     )
-    _id = db["prompts"].insert_one(jsonable_encoder({"text": prompt, "date": datetime.utcnow()}))
-    # Print the generated text
+    db["Prompt"].insert_one(jsonable_encoder({"text": prompt, "date": datetime.utcnow()}))
     message = completions.choices[0]['message']['content']
     return (message)
 
+@app.post("/lstm")
+async def generate_lstm_text(prompt: str):
+
+
+    response = requests.get(wit_api_endpoint, headers = { 'Authorization': f'Bearer {wit_access_token}' }, params = { 'q': prompt.lower() })
+    response_json = response.json()
+    value = list(response_json['entities'].keys())[0]
+
+    entity = response_json['entities'][value][0]['name']
+    role = response_json['entities'][value][0]['role']
+    intent = response_json['intents'][0]['name']
+    trait = response_json['traits'][list(response_json['traits'].keys())[0]][0]['value']
+
+    entity_text = db["NLU"].find_one({ 'name': entity })['text']
+    role_text = db["NLU"].find_one({ 'name': role })['text']
+    intent_text = db["NLU"].find_one({ 'name': intent })['text']
+    trait_text = db["NLU"].find_one({ 'name': trait })['text']
+
+    ans = entity_text + role_text + intent_text + trait_text
+
+    db["Prompt"].insert_one(jsonable_encoder({"text": prompt, "date": datetime.utcnow()}))
+
+    return (ans)
+
 @app.get("/prompts", response_class=StreamingResponse)
 async def export_data():
-    prompts = [p['text'] for p in db["prompts"].find()]
-
+    prompts = [p['text'] for p in db["Prompt"].find()]
     df = pd.DataFrame({'=============== Chatbot Prompts ===============': prompts})
     stream = io.StringIO()
     df.to_csv(stream, index=False)
