@@ -49,7 +49,6 @@ async def export_data():
     df = pd.DataFrame({'=============== Chatbot Prompts ===============': prompts})
     stream = io.StringIO()
     df.to_csv(stream, index=False)
-    response = StreamingResponse(
-        iter([stream.getvalue()]), media_type='text/csv')
+    response = StreamingResponse(iter([stream.getvalue()]), media_type='text/csv')
     response.headers['Content-Disposition'] = 'attachment; filename=prompts.csv'
     return response
