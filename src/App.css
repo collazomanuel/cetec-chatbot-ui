@@ -6,6 +6,7 @@
   --clr-5: #f2a900;
   --clr-6: #b3c50e;
   --clr-7: #d9d9d6;
+  --clr-7: #008ac6
 }
 
 .App {
@@ -55,9 +56,6 @@
   height: 100vh !important;
 }
 
-.App-footer {
-  display: none !important;
-}
 .chatbot {
   display: block !important;
 }
@@ -119,4 +117,14 @@
   100% {
     opacity: 0;
   }
+}
+
+.login {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  vertical-align: center;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--clr-7);
 }

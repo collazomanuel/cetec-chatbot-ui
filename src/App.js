@@ -1,8 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { useGoogleLogin } from '@react-oauth/google';
+import GoogleButton from 'react-google-button'
 import axios from 'axios';
-import fiubaLogo from './fiuba-logo.png'
+//import fiubaLogo from './fiuba-logo.png'
 import cetecLogo from './cetec-logo.png'
 import './App.css';
 import Chat from './Chat'
@@ -37,7 +38,7 @@ function App() {
   );
 
   return (
-    <div className=' App'>
+    <div className='App'>
       {profile ? (
         <>
           <div className='chatbot'>
@@ -46,12 +47,10 @@ function App() {
           {/*<button onClick={logout}>Cerrar sesión</button>*/}
         </>
       ) : (
-        <>
-          <button onClick={() => login()}>Iniciar sesión con Google</button>
-          <div className='App-footer'>
-            <img src={fiubaLogo} className='fiuba-logo' alt='fiuba-logo' />
-          </div>
-        </>        
+        <div className='login'>
+          <img src={cetecLogo} className='fiuba-logo' alt='fiuba-logo' />
+          <GoogleButton label='Iniciar sesión con Google' type='light' onClick={() => login()} />
+        </div>        
       )}
     </div>
   );
