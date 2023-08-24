@@ -128,3 +128,7 @@
   align-items: center;
   background-color: var(--clr-7);
 }
+
+.google-button {
+  padding-right: 2%;
+}

@@ -49,7 +49,7 @@ function App() {
       ) : (
         <div className='login'>
           <img src={cetecLogo} className='fiuba-logo' alt='fiuba-logo' />
-          <GoogleButton label='Iniciar sesión con Google' type='light' onClick={() => login()} />
+          <GoogleButton className='google-button' label='Iniciar sesión con Google' type='light' onClick={() => login()} />
         </div>        
       )}
     </div>
