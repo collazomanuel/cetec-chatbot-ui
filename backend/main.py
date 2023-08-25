@@ -21,6 +21,30 @@ db = client['cetec-chatbot']
 app.add_middleware(CORSMiddleware, allow_origins=['*'], allow_credentials=True, allow_methods=['*'], allow_headers=['*'])
 model_engine = 'gpt-3.5-turbo'
 
+def build_answer(entity, role, intent, trait):
+    structures = [entity, role, intent, trait]
+    answer = ''
+    for text in structures:
+        if text[-1] == ' ':
+            text = text[0:-1]
+        if text[-1] == ' ':
+            text = text[0:-1]
+        if text[-1] != '.':
+            text = text + '.'
+        text = text + ' '
+        text = text[0].upper() + text[1:]
+        for i in range(0, len(text)-1):
+            if text[i] == '.' and text[i+1] == ' ' and i+2 != len(text):
+                text = text[:i+2] + text[i+2].upper() + text[i+3:]
+            if i != 0 and text[i] == ' ' and text [i-1] == ' ':
+                text = text[:i] + text[i+1:]
+                i = i-1
+        answer += text
+    return answer
+
+# 'si la fuerza aplicada es conservativa el trabajo no depende de la trayectoria. hay que considerar la trayectoria si  la fuerza no es conservativa'
+# 'Si la fuerza aplicada es conservativa el trabajo no depende de la trHy que considerar la trayectoria si  la fuerza no es conservativa. '
+
 @app.post('/gpt')
 async def generate_gpt_text(prompt: str):
     completions = openai.ChatCompletion.create(model= model_engine, temperature=.2, top_p=0.3, messages=[{'role': 'user', 'content': prompt}])
@@ -39,7 +63,7 @@ async def generate_lstm_text(prompt: str):
     role_text = db['NLU'].find_one({ 'name': role })['text']
     intent_text = db['NLU'].find_one({ 'name': intent })['text']
     trait_text = db['NLU'].find_one({ 'name': trait })['text']
-    ans = entity_text + role_text + intent_text + trait_text
+    ans = build_answer(entity_text, role_text, intent_text, trait_text)
     db['Prompt'].insert_one(jsonable_encoder({'text': prompt, 'date': datetime.utcnow()}))
     return (ans)
 
