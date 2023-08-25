@@ -42,9 +42,6 @@ def build_answer(entity, role, intent, trait):
         answer += text
     return answer
 
-# 'si la fuerza aplicada es conservativa el trabajo no depende de la trayectoria. hay que considerar la trayectoria si  la fuerza no es conservativa'
-# 'Si la fuerza aplicada es conservativa el trabajo no depende de la trHy que considerar la trayectoria si  la fuerza no es conservativa. '
-
 @app.post('/gpt')
 async def generate_gpt_text(prompt: str):
     completions = openai.ChatCompletion.create(model= model_engine, temperature=.2, top_p=0.3, messages=[{'role': 'user', 'content': prompt}])
