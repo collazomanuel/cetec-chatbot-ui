@@ -10,16 +10,15 @@ import pandas as pd
 import io
 import requests
 
-openai.api_key = config('OPENAI_KEY')
 mongodb_key = config('MONGODB_KEY')
 wit_access_token = config('WIT_ACCESS_TOKEN')
 wit_api_endpoint = config('WIT_API_ENDPOINT')
+openai.api_key = config('OPENAI_KEY')
 
 app = FastAPI()
+app.add_middleware(CORSMiddleware, allow_origins = ['*'], allow_credentials = True, allow_methods = ['*'], allow_headers = ['*'])
 client = MongoClient(mongodb_key)
 db = client['cetec-chatbot']
-app.add_middleware(CORSMiddleware, allow_origins=['*'], allow_credentials=True, allow_methods=['*'], allow_headers=['*'])
-model_engine = 'gpt-3.5-turbo'
 
 def build_answer(entity, role, intent, trait):
     structures = [entity, role, intent, trait]
@@ -44,7 +43,8 @@ def build_answer(entity, role, intent, trait):
 
 @app.post('/gpt')
 async def generate_gpt_text(prompt: str):
-    completions = openai.ChatCompletion.create(model= model_engine, temperature=.2, top_p=0.3, messages=[{'role': 'user', 'content': prompt}])
+    model_engine = 'gpt-3.5-turbo'
+    completions = openai.ChatCompletion.create(model = model_engine, temperature = .2, top_p = 0.3, messages = [{'role': 'user', 'content': prompt}])
     db['Prompt'].insert_one(jsonable_encoder({'text': prompt, 'date': datetime.utcnow()}))
     message = completions.choices[0]['message']['content']
     return (message)
@@ -69,7 +69,7 @@ async def export_data():
     prompts = [p['text'] for p in db['Prompt'].find()]
     df = pd.DataFrame({'=============== Chatbot Prompts ===============': prompts})
     stream = io.StringIO()
-    df.to_csv(stream, index=False)
+    df.to_csv(stream, index = False)
     response = StreamingResponse(iter([stream.getvalue()]), media_type='text/csv')
     response.headers['Content-Disposition'] = 'attachment; filename=prompts.csv'
     return response
