@@ -48,6 +48,7 @@ npm run build
 
 Esta página fue construida con las siguientes dependencias:
 
+- @react-oauth/google 0.11.0
 - react-chatbot-kit 2.1.2
 - axios 1.3.5
 
@@ -116,12 +117,12 @@ FastAPI proporciona una documentación interactiva generada automáticamente en 
 GET /docs
 ```
 
-#### Generate (Servicio)
+#### Answer (Servicio)
 
 Este servicio recibe una pregunta o consigna y retorna la respuesta de GPT. Para utilizarlo se debe efectuar una _POST request_ indicando la pregunta o consigna en la _query_ de la siguiente forma:
 
 ```http
-POST http://0.0.0.0:8000/generate?prompt=[prompt]
+POST http://0.0.0.0:8000/answer?prompt=[prompt]
 ```
 
 #### Prompts (Servicio)
