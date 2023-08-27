@@ -41,27 +41,40 @@ def build_answer(entity, role, intent, trait):
         answer += text
     return answer
 
-@app.post('/gpt')
-async def generate_gpt_text(prompt: str):
+def ask_gpt(prompt: str):
     model_engine = 'gpt-3.5-turbo'
     completions = openai.ChatCompletion.create(model = model_engine, temperature = .2, top_p = 0.3, messages = [{'role': 'user', 'content': prompt}])
-    db['Prompt'].insert_one(jsonable_encoder({'text': prompt, 'date': datetime.utcnow()}))
-    message = completions.choices[0]['message']['content']
-    return (message)
+    ans = completions.choices[0]['message']['content']
+    return (ans)
 
-@app.post('/lstm')
-async def generate_lstm_text(prompt: str):
+def ask_lstm(prompt: str):
+    conf_threshold = 0.6
     response = requests.get(wit_api_endpoint, headers = { 'Authorization': f'Bearer {wit_access_token}' }, params = { 'q': prompt.lower() }).json()
     entity = response['entities'][list(response['entities'].keys())[0]][0]['name']
     role = response['entities'][list(response['entities'].keys())[0]][0]['role']
     intent = response['intents'][0]['name']
     trait = response['traits'][list(response['traits'].keys())[0]][0]['value']
+    entity_conf = response['entities'][list(response['entities'].keys())[0]][0]['confidence']
+    entity_conf = 0.4
+    intent_conf = response['intents'][0]['confidence']
+    trait_conf = response['traits'][list(response['traits'].keys())[0]][0]['confidence']
+    if entity_conf < conf_threshold or intent_conf < conf_threshold or trait_conf < conf_threshold:
+        raise Exception("Confidence")
     entity_text = db['NLU'].find_one({ 'name': entity })['text']
     role_text = db['NLU'].find_one({ 'name': role })['text']
     intent_text = db['NLU'].find_one({ 'name': intent })['text']
     trait_text = db['NLU'].find_one({ 'name': trait })['text']
     ans = build_answer(entity_text, role_text, intent_text, trait_text)
+    return (ans)
+
+@app.post('/answer')
+async def generate_answer(prompt: str):
     db['Prompt'].insert_one(jsonable_encoder({'text': prompt, 'date': datetime.utcnow()}))
+    ans = ''
+    try:
+        ans = ask_lstm(prompt)
+    except:
+        ans = ask_gpt(prompt)
     return (ans)
 
 @app.get('/prompts', response_class=StreamingResponse)

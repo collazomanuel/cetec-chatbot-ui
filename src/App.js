@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { useGoogleLogin } from '@react-oauth/google';
 import GoogleButton from 'react-google-button'
 import axios from 'axios';
-//import fiubaLogo from './fiuba-logo.png'
 import cetecLogo from './cetec-logo.png'
 import './App.css';
 import Chat from './Chat'
@@ -44,7 +43,6 @@ function App() {
           <div className='chatbot'>
             <Chat userName={profile.given_name} userImage={profile.picture} botImage={cetecLogo}/>
           </div>
-          {/*<button onClick={logout}>Cerrar sesión</button>*/}
         </>
       ) : (
         <div className='login'>

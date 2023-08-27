@@ -2,7 +2,7 @@ import React from 'react';
 import Chatbot from 'react-chatbot-kit';
 import 'react-chatbot-kit/build/main.css';
 import { createChatBotMessage } from 'react-chatbot-kit';
-import { askLSTM } from './services';
+import { askBot } from './services';
 
 const Loader = () => {
   return (
@@ -24,7 +24,7 @@ function Chat(props) {
 
   const MessageParser = ({ children, actions }) => {
     const parse = (message) => {
-      if (message.includes('hola')) {
+      if (message.toLowerCase().includes('hola')) {
         actions.handleHello();
       } else {
         actions.handleQuestion(message);
@@ -49,8 +49,8 @@ function Chat(props) {
     const handleQuestion = (message) => {
       const loadingMessage = createChatBotMessage(Loader());
       setState((prev) => ({ ...prev, messages: [...prev.messages, loadingMessage] }));
-      askLSTM(message).then((response) => {
-        let botMessage = createChatBotMessage(response.answer);
+      askBot(message).then((response) => {
+        let botMessage = createChatBotMessage(response);
         botMessage.loading = false;
         setState((prev) => ({ ...prev, messages: [...prev.messages.slice(0, -1), botMessage] }));
       });
