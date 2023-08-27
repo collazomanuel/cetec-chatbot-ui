@@ -27,9 +27,7 @@ function App() {
               Accept: 'application/json'
             }
           })
-          .then((response) => {
-            setProfile(response.data);
-          })
+          .then((response) => setProfile(response.data))
           .catch((err) => console.log(err));
       }
     },
