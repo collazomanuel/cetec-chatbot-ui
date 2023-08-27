@@ -59,7 +59,7 @@ def ask_lstm(prompt: str):
     intent_conf = response['intents'][0]['confidence']
     trait_conf = response['traits'][list(response['traits'].keys())[0]][0]['confidence']
     if entity_conf < conf_threshold or intent_conf < conf_threshold or trait_conf < conf_threshold:
-        raise Exception("Confidence")
+        raise Exception('Confidence')
     entity_text = db['NLU'].find_one({ 'name': entity })['text']
     role_text = db['NLU'].find_one({ 'name': role })['text']
     intent_text = db['NLU'].find_one({ 'name': intent })['text']
